@@ -652,3 +652,4 @@ function menu()
         st.spv=v
         local c=LP.Character
         if c and c:FindFirstChild("Humanoid") and st.sp then
+            c.Humanoid.WalkSpeed=v 
