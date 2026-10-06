@@ -652,4 +652,49 @@ function menu()
         st.spv=v
         local c=LP.Character
         if c and c:FindFirstChild("Humanoid") and st.sp then
-            c.Humanoid.WalkSpeed=v 
+            c.Humanoid.WalkSpeed=v
+        end
+    end
+    str.InputBegan:Connect(function(i)
+        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+            sdr=true;supd(i)
+        end
+    end)
+    U.InputChanged:Connect(function(i)
+        if sdr and (i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch) then
+            supd(i)
+        end
+    end)
+    U.InputEnded:Connect(function(i)
+        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then sdr=false end
+    end)
+
+    R.Stepped:Connect(function()
+        if st.nc then
+            local c=LP.Character
+            if c then
+                for _,p in ipairs(c:GetDescendants()) do
+                    if p:IsA("BasePart") then p.CanCollide=false end
+                end
+            end
+        end
+    end)
+
+    R.RenderStepped:Connect(function()
+        if not st.sp then return end
+        local c=LP.Character
+        if not c then return end
+        local h=c:FindFirstChildOfClass("Humanoid")
+        local r=c:FindFirstChild("HumanoidRootPart")
+        if not h or not r then return end
+        if h.WalkSpeed ~= st.spv then
+            h.WalkSpeed = st.spv
+        end
+        if h.WalkSpeed < 5 then
+            local md = h.MoveDirection
+            if md.Magnitude > 0.01 then
+                r.CFrame = r.CFrame + md * 0.5
+            end
+        end
+    end)
+end 
